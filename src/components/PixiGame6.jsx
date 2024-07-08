@@ -1,18 +1,18 @@
 import {Container, Stage, Text, Graphics } from '@pixi/react';
-import './App.css';
+import '../App.css';
 import '@pixi/events';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { TextStyle } from 'pixi.js';
 import Confetti from 'react-confetti'
-import words from './words.json'
-// import ConfettiComponent from './ConfettiComponent';
-// import Confetti from 'canvas-confetti';
+import words from '../assets/words.json'
 
-function PixiGame5() {
+
+
+function PixiGame6() {
     
     const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
     const [puzzle, setPuzzle] = useState([]);
-    let completedWord = useMemo(()=>words[7].words, []);
+    let completedWord = useMemo(()=>words[8].words, []);
     const [selectedWord, setSelectedWord] = useState("")
     const [drawing, setDrawing] = useState(false)
     const [indices, setIndices] = useState([])
@@ -25,13 +25,15 @@ function PixiGame5() {
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const [completedTime, setCompletedTime] = useState(null);
-    // const [elapsedSeconds, setElapsedSeconds] = useState(0);
+    
     const [mobile, setMobile] = useState(false)
     const [isCompleted, setIsCompleted] = useState(false)
     const [ongoingElapsedTime, setOngoingElapsedTime] = useState(0);
     const [isStarted, setisStarted] = useState(false)
-    const textArr = useMemo(()=>words[7].grid,[]);
-    let hei;
+    const textArr = useMemo(()=>words[8].grid,[]);
+    const [info_pic, setInfoPic] = useState(null);
+
+    let hei
 
 
     const handleOrientationChange = useCallback(() => {
@@ -41,13 +43,14 @@ function PixiGame5() {
         }
     }, []);
 
-    const toggleScroll = (disable) => {
-        if (disable) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'auto';
-        }
-    };
+    useEffect(() => {
+        const loadImage = async () => {
+          const imageModule = await import('../assets/images/info_pic.png');
+          setInfoPic(imageModule.default);
+        };
+    
+        loadImage();
+      }, []);
 
     useEffect(() => {
         window.addEventListener("orientationchange", handleOrientationChange);
@@ -55,13 +58,18 @@ function PixiGame5() {
             window.removeEventListener("orientationchange", handleOrientationChange);
         };
     }, [handleOrientationChange]);
+
+    const toggleScroll = (disable) => {
+        if (disable) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+    };
     
     
     function readOutLoud(text){
-        if ('speechSynthesis' in window) {
-            // Speech Synthesis supported 🎉
-           }else{
-             // Speech Synthesis Not Supported 😣
+        if (!('speechSynthesis' in window)) {
              alert("Sorry, your browser doesn't support text to speech!");
            }
             var msg = new SpeechSynthesisUtterance();
@@ -70,8 +78,7 @@ function PixiGame5() {
     }
 
     useEffect(() => {
-        if(isStarted)
-        setStartTime(new Date());
+        isStarted && setStartTime(new Date());
     }, [isStarted]);
 
     useEffect(() => {
@@ -151,7 +158,7 @@ function PixiGame5() {
     
     useEffect(() => {
         if(window.innerHeight > 630 && window.innerWidth > 830){
-        let k = 0;
+            let k = 0;
         let newPuzzle = [];
         for (let ind = 0; ind < textArr.length; ind++) {
             if (ind <= 10) {
@@ -184,7 +191,7 @@ function PixiGame5() {
         setPuzzle(newPuzzle);
     }
     else{
-       let k = 0;
+        let k = 0;
         let newPuzzle = [];
         setMobile(true)
         for (let ind = 0; ind < textArr.length; ind++) {
@@ -248,6 +255,7 @@ function PixiGame5() {
                         ...line,{start_x: puzzle[indices[indices.length - 2]].xPos, start_y: puzzle[indices[indices.length - 2]].yPos, end_x:puzzle[indices[indices.length - 1]].xPos, end_y:puzzle[indices[indices.length - 1]].yPos, clear: "none"}
                     ])
                 }
+                    
                 }
                 return {
                     ...word,
@@ -338,7 +346,7 @@ function PixiGame5() {
             }
             setDrawing(false);
             if (!completedWord.includes(selectedWord)) {
-                // setTries(prev=>prev+1)
+                
                 for(let l=0;l<indices.length;l++){
                     for(let k=0;k<puzzle.length;k++){
                     if(indices[l] === puzzle[k].index){
@@ -361,8 +369,8 @@ function PixiGame5() {
             else if(!completedWords.includes(selectedWord)){
                 setDrawing(false);
                 readOutLoud(selectedWord)
-                // setTries(prev=>prev+1)
-                // alert("Congrats!! You have found a word");
+                
+                
                 setCompletedWords([...completedWords,selectedWord+"\t\t"]);
                 setStrCompletedWords(prev => prev + selectedWord + "\t\t");
                 console.log("completed:"+completedWords[0])
@@ -388,7 +396,7 @@ function PixiGame5() {
                 }
             }
             else{
-                // setTries(prev=>prev+1)
+                
                 alert("Already found the word "+selectedWord+"!!")
                 readOutLoud(selectedWord);
                 setSelectedWord("")
@@ -416,8 +424,8 @@ function PixiGame5() {
 
     useEffect(()=>{
        if (completedWords.length === completedWord.length) {
-            // confetti();
-            // alert("Congrats!!You have finished the game.")
+            
+            
             setIsCompleted(true)
     }},[completedWords, completedWord])
 
@@ -426,7 +434,7 @@ function PixiGame5() {
     
         if (startTime && !endTime) {
             interval = setInterval(() => {
-                setOngoingElapsedTime((new Date() - startTime) / 1000); // elapsed time in seconds
+                setOngoingElapsedTime((new Date() - startTime) / 1000); 
             }, 1000);
         } else if (endTime) {
             clearInterval(interval);
@@ -441,11 +449,9 @@ if(window.innerHeight > 630 && window.innerWidth > 830){
     return (
     <>
     {isCompleted && <Confetti/>}
-            {/* <Voice ReadingText={"Find the words listed below  Click and drag on the letters to select them"}/> */}
             <div className="App">
-    {/* {isCompleted && <ConfettiComponent isCompleted={{isCompleted}}/>} */}
       <div className="image-container">
-        <img src='../info_pic.png' alt="Descriptive Image" className="hover-image" onClick={()=>readOutLoud("Find the words listed below  Click and drag on the letters to select them")} style={{height: 35}}/>
+        <img src={info_pic} alt="Descriptive Image" className="hover-image" onClick={()=>readOutLoud("Find the words listed below  Click and drag on the letters to select them")} style={{height: 35}}/>
         <span style={{display: 'flex'}}><div className="description">Find the words listed below  Click and drag on the letters to select them.</div>
         {<h4 style={{marginLeft: window.innerWidth/2 + 80}}>Time: {ongoingElapsedTime.toFixed(0)}</h4>}</span>
       </div>
@@ -469,10 +475,8 @@ if(window.innerHeight > 630 && window.innerWidth > 830){
                     interactive={true}
                 />
             ))}
-            {/* <Graphics draw={draw} />  */}
             </Container>
         </Stage>
-        {/* <canvas ref={confettiCanvasRef} className="confetti-canvas"></canvas> */}
         
         <br/>
         <br/>
@@ -481,16 +485,12 @@ if(window.innerHeight > 630 && window.innerWidth > 830){
         <h3>Completed Words: {StrCompletedWords}</h3>
         <br/>
         <div style={{marginLeft: window.innerWidth/4 + 100}}>
-        <a type="button" className="btn btn-secondary btn-lg" href='/word-matching/game4'>Previous</a>
-            <a type="button" className="btn btn-secondary btn-lg" href='/word-matching/game6' style={{marginLeft: window.innerWidth/4}}>Next</a>
+        <a type="button" className="btn btn-secondary btn-lg" href='/games/wordsearching/game5'>Previous</a>
+            <a type="button" className="btn btn-secondary btn-lg" href='/games/wordsearching/game7' style={{marginLeft: window.innerWidth/4}}>Next</a>
             </div>
             <br/>
             <br/>
             <br/>
-        {/* <h3>Time: {elapsedSeconds}</h3>
-        {completedTime && (
-                <h3>Time taken to complete: {completedTime / 1000} seconds</h3>
-            )} */}
         </>
     );
     
@@ -501,13 +501,12 @@ else{
         {isCompleted && <Confetti/>}
         <div className="A">
       <div className="image-container">
-        <img src='../info_pic.png' alt="Descriptive Image" className="hover-image" onClick={()=>readOutLoud("Find the words listed below  Click and drag on the letters to select them")} style={{height: 35}}/>
+        <img src={info_pic} alt="Descriptive Image" className="hover-image" onClick={()=>readOutLoud("Find the words listed below  Click and drag on the letters to select them")} style={{height: 35}}/>
         <span style={{display: 'flex'}}><div className="description">Find the words listed below  Click and drag on the letters to select them.</div>
         <h5 style={{marginLeft: window.innerWidth/15, padding: 0, width: 100}}>Time: {ongoingElapsedTime.toFixed(0)}</h5><h4 style={{marginLeft: window.innerWidth/12, padding: 0, width: 100}}>Tries: {tries}</h4></span>
       </div>
     </div>
-        {/* <Voice ReadingText={"Find the words listed below  Click and drag on the letters to select them"}/> */}
-            <Stage x={0} y={0} options={{ backgroundColor: 11644879 }} height={dimensions.height} width={dimensions.width - 150} className='stage-container'>
+            <Stage x={0} y={0} options={{ backgroundColor: 11644879}} height={dimensions.height} width={dimensions.width - 150} className='stage-container'>
             <Graphics draw={draw} /> 
     
                 <Container name='textArea'>
@@ -524,10 +523,8 @@ else{
                         interactive={true}
                     />
                 ))}
-                {/* <Graphics draw={draw} />  */}
                 </Container>
             </Stage>
-            {/* <canvas ref={confettiCanvasRef} className="confetti-canvas"></canvas> */}
             
             <br/>
             <br/>
@@ -535,17 +532,12 @@ else{
             <h1>Given Words: {givenWords}</h1>
             <h3>Completed Words: {StrCompletedWords}</h3>
             <div style={{marginLeft: window.innerWidth/4}}>
-        <a type="button" className="btn btn-secondary" href='/word-matching/game3'>Previous</a>
-            <a type="button" className="btn btn-secondary" href='/word-matching/game6' style={{marginLeft: window.innerWidth/4}}>Next</a>
+        <a type="button" className="btn btn-secondary" href='/games/wordsearching/game5'>Previous</a>
+            <a type="button" className="btn btn-secondary" href='/' style={{marginLeft: window.innerWidth/4}}>Next</a>
             </div>
-
-            {/* <h3>Time: {elapsedSeconds}</h3>
-            {completedTime && (
-                    <h3>Time taken to complete: {completedTime / 1000} seconds</h3>
-                )} */}
             </>
         );
 }
 }
 
-export default PixiGame5;
+export default PixiGame6;

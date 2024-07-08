@@ -10,7 +10,7 @@ function Completed(){
         <div className="all-levels-completed">
       <h1>All Levels Completed!</h1>
       <h2>Congratulations !!!</h2>
-      <Link to="/word-matching"> 
+      <Link to="/"> 
         <button>Replay</button> 
       </Link>
     </div>
