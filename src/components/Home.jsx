@@ -27,33 +27,15 @@ function Home(prop) {
         </span>
         <br/>
         <div>
-          <input 
-            type='radio' 
-            id='English' 
-            name='Language' 
-            value='English' 
-            checked={lang === 'English'} 
-            onChange={handleLangChange} 
+          <input type='radio' id='English' name='Language' value='English' checked={lang === 'English'} onChange={handleLangChange} 
           />
-          <label htmlFor='English'>English</label>
-          <input 
-            type='radio' 
-            id='Hindi' 
-            name='Language' 
-            value='Hindi' 
-            checked={lang === 'Hindi'} 
-            onChange={handleLangChange} 
+          <label htmlFor='English' style={{paddingRight:10}}>English</label>
+          <input type='radio' id='Hindi' name='Language' value='Hindi' checked={lang === 'Hindi'} onChange={handleLangChange} 
           />
-          <label htmlFor='Hindi'>Hindi</label>
-          <input 
-            type='radio' 
-            id='Telugu' 
-            name='Language' 
-            value='Telugu' 
-            checked={lang === 'Telugu'} 
-            onChange={handleLangChange} 
+          <label htmlFor='Hindi' style={{paddingRight:10}}>हिंदी</label>
+          <input type='radio' id='Telugu' name='Language' value='Telugu' checked={lang === 'Telugu'} onChange={handleLangChange} 
           />
-          <label htmlFor='Telugu'>Telugu</label>
+          <label htmlFor='Telugu' style={{paddingRight:10}}>తెలుగు</label>
         </div>
       </div>
     </>
