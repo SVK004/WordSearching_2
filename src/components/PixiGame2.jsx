@@ -244,7 +244,7 @@ function PixiGame1() {
         }
         setPuzzle(newPuzzle);
     }
-    }, [dimensions]);
+    }, [dimensions, textArr]);
 
 
     useEffect(() => {
